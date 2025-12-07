@@ -35,9 +35,7 @@ in >> student.age;
 cout << "Enter GPA: ";
 in >> student.gpa;
 in.ignore();
-
-
- return in;
+return in;
 }
 ostream& operator<<(ostream& out, const Student& student) {
 out << "Student Information:" << endl;
@@ -45,4 +43,7 @@ out << "  Name: " << student.name << endl;
 out << "  Age: " << student.age << endl;
 out << "  GPA: " << student.gpa << endl;
 return out;
+}
+bool Student::operator==(const Student& other) const {
+return (name == other.name && age == other.age && gpa == other.gpa);
 }
