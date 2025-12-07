@@ -1,11 +1,8 @@
 #include "Student.h"
-
 #include <iostream>
-#include <iostream>
-
 using namespace std;
 Student::Student() {
- name = "Unknown";
+name = "Unknown";
 age = 0;
 gpa = 0.0;
 cout << "Default constructor called" << endl;
@@ -17,7 +14,7 @@ gpa = g;
 cout << "Parameterized constructor called for " << name << endl;
 }
 Student::Student(const Student& other) {
- name = other.name;
+name = other.name;
 age = other.age;
 gpa = other.gpa;
 cout << "Copy constructor called for " << name << endl;
@@ -38,5 +35,14 @@ in >> student.age;
 cout << "Enter GPA: ";
 in >> student.gpa;
 in.ignore();
-return in;
+
+
+ return in;
+}
+ostream& operator<<(ostream& out, const Student& student) {
+out << "Student Information:" << endl;
+out << "  Name: " << student.name << endl;
+out << "  Age: " << student.age << endl;
+out << "  GPA: " << student.gpa << endl;
+return out;
 }
