@@ -1,44 +1,33 @@
 #ifndef SELLER_H
 #define SELLER_H
 
-#include <string>
+#include "Person.h"
 #include <vector>
-#include <iostream>
+#include <string>
 using namespace std;
-class Seller {
+
+class Seller : public Person {
 private:
-int id;
-string lastName;
- string firstName;
-string patronymic;
-string address;
-string accountNumber;
-vector<string> products;
+    string accountNumber;
+    vector<string> products;
+
 public:
-Seller();
-Seller(int id, string lastName, string firstName, string patronymic,
+    // Конструктори
+    Seller();
+    Seller(int id, string lastName, string firstName, string patronymic,
+           string address, string accountNumber);
+    Seller(const Seller& other);
 
-string address, string accountNumber);
-Seller(const Seller& other);
-~Seller();
-void addProduct(const string& product);
-void removeProduct(const string& product);
-void displayProducts() const;
-void display() const;
-void setId(int id);
-void setLastName(const string& lastName);
-void setFirstName(const string& firstName);
+    // Деструктор
+    ~Seller();
 
- void setPatronymic(const string& patronymic);
-void setAddress(const string& address);
-void setAccountNumber(const string& accountNumber);
- int getId() const;
-string getLastName() const;
- string getFirstName() const;
-string getPatronymic() const;
-string getAddress() const;
-string getAccountNumber() const;
+    // Методи для роботи зі списком товарів
+    void addProduct(const string& product);
+    void removeProduct(const string& product);
+    void displayProducts() const;
 
-vector<string> getProducts() const;
+    // Перевизначений метод виведення
+    void display() const override;
 };
+
 #endif

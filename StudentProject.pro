@@ -5,9 +5,11 @@ CONFIG -= qt
 
 SOURCES += \
     main.cpp \
+    Person.cpp \
     Student.cpp \
     Seller.cpp
 
 HEADERS += \
+    Person.h \
     Student.h \
     Seller.h

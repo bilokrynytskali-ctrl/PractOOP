@@ -1,65 +1,45 @@
 #include "Student.h"
-#include <iostream>
-using namespace std;
 
 // Конструктор за замовчуванням
-Student::Student() {
-    name = "Unknown";
-    age = 0;
-    gpa = 0.0;
-    cout << "Default constructor called" << endl;
+Student::Student() : Person() {
+    phone = "000-000-0000";
+    faculty = "Unknown";
+    course = 1;
+    group = "Unknown";
+    cout << "Default Student constructor called" << endl;
 }
 
 // Параметризований конструктор
-Student::Student(string n, int a, double g) {
-    name = n;
-    age = a;
-    gpa = g;
-    cout << "Parameterized constructor called for " << name << endl;
+Student::Student(int id, string lastName, string firstName, string patronymic,
+                 string address, string phone, string faculty, int course, string group)
+    : Person(id, lastName, firstName, patronymic, address) {
+    this->phone = phone;
+    this->faculty = faculty;
+    this->course = course;
+    this->group = group;
+    cout << "Parameterized Student constructor called" << endl;
 }
 
 // Конструктор копіювання
-Student::Student(const Student& other) {
-    name = other.name;
-    age = other.age;
-    gpa = other.gpa;
-    cout << "Copy constructor called for " << name << endl;
+Student::Student(const Student& other) : Person(other) {
+    phone = other.phone;
+    faculty = other.faculty;
+    course = other.course;
+    group = other.group;
+    cout << "Copy Student constructor called" << endl;
 }
 
 // Деструктор
 Student::~Student() {
-    cout << "Destructor called for " << name << endl;
+    cout << "Student destructor called" << endl;
 }
 
-// Метод виведення
+// Виведення інформації
 void Student::display() const {
-    cout << "Name: " << name << endl;
-    cout << "Age: " << age << endl;
-    cout << "GPA: " << gpa << endl;
-}
-
-// Перевантаження оператора >> для зчитування з консолі
-istream& operator>>(istream& in, Student& student) {
-    cout << "Enter name: ";
-    getline(in, student.name);
-    cout << "Enter age: ";
-    in >> student.age;
-    cout << "Enter GPA: ";
-    in >> student.gpa;
-    in.ignore();
-    return in;
-}
-
-// Перевантаження оператора << для виведення в консоль
-ostream& operator<<(ostream& out, const Student& student) {
-    out << "Student Information:" << endl;
-    out << "  Name: " << student.name << endl;
-    out << "  Age: " << student.age << endl;
-    out << "  GPA: " << student.gpa << endl;
-    return out;
-}
-
-// Перевантаження оператора == для порівняння об'єктів
-bool Student::operator==(const Student& other) const {
-    return (name == other.name && age == other.age && gpa == other.gpa);
+    cout << "\n=== Student Information ===" << endl;
+    Person::display();
+    cout << "Phone: " << phone << endl;
+    cout << "Faculty: " << faculty << endl;
+    cout << "Course: " << course << endl;
+    cout << "Group: " << group << endl;
 }
