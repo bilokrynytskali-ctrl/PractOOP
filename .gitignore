@@ -1,0 +1,29 @@
+# Compiled Object files
+*.o
+*.obj
+# Executables
+*.exe
+*.out
+*.app
+# Qt-specific
+*.pro.user
+*.autosave
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+Makefile*
+*build-*
+*.Debug
+*.Release
+# Build folders
+build/
+debug/
+release/
+.qtcreator/
+# IDE files
+.vscode/
+.idea/
+*.user
+# OS files
+.DS_Store
+Thumbs.db
