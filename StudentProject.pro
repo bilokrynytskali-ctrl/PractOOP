@@ -4,6 +4,8 @@ CONFIG -= app_bundle
 CONFIG -= qt
 SOURCES += \
 main.cpp \
-Student.cpp
+Student.cpp \
+Seller.cpp
 HEADERS += \
-Student.h
+Student.h \
+Seller.h
