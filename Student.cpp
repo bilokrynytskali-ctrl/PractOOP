@@ -34,10 +34,10 @@ Student::~Student() {
     cout << "Student destructor called" << endl;
 }
 
-// Виведення інформації
+// Реалізація чисто віртуального методу
 void Student::display() const {
     cout << "\n=== Student Information ===" << endl;
-    Person::display();
+    displayBase();
     cout << "Phone: " << phone << endl;
     cout << "Faculty: " << faculty << endl;
     cout << "Course: " << course << endl;

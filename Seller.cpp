@@ -56,10 +56,10 @@ void Seller::displayProducts() const {
     }
 }
 
-// Виведення інформації
+// Реалізація чисто віртуального методу
 void Seller::display() const {
     cout << "\n=== Seller Information ===" << endl;
-    Person::display();
+    displayBase();
     cout << "Account number: " << accountNumber << endl;
     displayProducts();
 }

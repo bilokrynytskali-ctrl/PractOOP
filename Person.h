@@ -22,8 +22,11 @@ public:
     // Віртуальний деструктор
     virtual ~Person();
 
-    // Віртуальний метод виведення
-    virtual void display() const;
+    // ЧИСТО ВІРТУАЛЬНИЙ метод (робить клас абстрактним)
+    virtual void display() const = 0;
+
+    // Звичайний метод для базової інформації
+    void displayBase() const;
 
     // Геттери
     int getId() const;

@@ -35,8 +35,8 @@ Person::~Person() {
     cout << "Person destructor called" << endl;
 }
 
-// Виведення інформації
-void Person::display() const {
+// Базова інформація (не віртуальна)
+void Person::displayBase() const {
     cout << "ID: " << id << endl;
     cout << "Full name: " << lastName << " " << firstName << " " << patronymic << endl;
     cout << "Address: " << address << endl;

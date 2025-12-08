@@ -4,48 +4,105 @@
 #include "Seller.h"
 using namespace std;
 
-int main() {
-    cout << "=== Testing inheritance: Person -> Student, Seller ===" << endl << endl;
+int showMenu() {
+    int choice;
+    cout << "\n=== Menu ===" << endl;
+    cout << "1. Create Student" << endl;
+    cout << "2. Create Seller" << endl;
+    cout << "Enter your choice (1-2): ";
+    cin >> choice;
+    cin.ignore();
+    return choice;
+}
 
-    // Testing Student
-    cout << "--- Creating Students ---" << endl;
-    Student student1(101, "Ivanenko", "Ivan", "Ivanovych",
-                     "Shevchenko st., 15", "067-123-4567",
-                     "Information Technologies", 2, "IT-21");
+Student* createStudent() {
+    int id, course;
+    string lastName, firstName, patronymic, address, phone, faculty, group;
 
-    Student student2(102, "Petrenko", "Maria", "Petrivna",
-                     "Franko st., 8", "095-987-6543",
-                     "Economics", 3, "EK-31");
+    cout << "\n--- Creating Student ---" << endl;
+    cout << "Enter ID: "; cin >> id; cin.ignore();
+    cout << "Enter last name: "; getline(cin, lastName);
+    cout << "Enter first name: "; getline(cin, firstName);
+    cout << "Enter patronymic: "; getline(cin, patronymic);
+    cout << "Enter address: "; getline(cin, address);
+    cout << "Enter phone: "; getline(cin, phone);
+    cout << "Enter faculty: "; getline(cin, faculty);
+    cout << "Enter course: "; cin >> course; cin.ignore();
+    cout << "Enter group: "; getline(cin, group);
 
-    student1.display();
-    student2.display();
+    return new Student(id, lastName, firstName, patronymic, address,
+                       phone, faculty, course, group);
+}
 
-    // Testing Seller
-    cout << "\n\n--- Creating Sellers ---" << endl;
-    Seller seller1(201, "Kovalenko", "Oleg", "Petrovych",
-                   "Khreshchatyk st., 10", "UA123456789");
-    seller1.addProduct("Laptop");
-    seller1.addProduct("Phone");
-    seller1.addProduct("Tablet");
+Seller* createSeller() {
+    int id;
+    string lastName, firstName, patronymic, address, accountNumber;
 
-    Seller seller2(202, "Sydorenko", "Olga", "Mykolaivna",
-                   "Nezalezhnosti ave., 25", "UA987654321");
-    seller2.addProduct("Monitor");
-    seller2.addProduct("Keyboard");
+    cout << "\n--- Creating Seller ---" << endl;
+    cout << "Enter ID: "; cin >> id; cin.ignore();
+    cout << "Enter last name: "; getline(cin, lastName);
+    cout << "Enter first name: "; getline(cin, firstName);
+    cout << "Enter patronymic: "; getline(cin, patronymic);
+    cout << "Enter address: "; getline(cin, address);
+    cout << "Enter account number: "; getline(cin, accountNumber);
 
-    seller1.display();
-    seller2.display();
+    Seller* seller = new Seller(id, lastName, firstName, patronymic,
+                                address, accountNumber);
 
-    cout << "\n\n--- Testing polymorphism ---" << endl;
-    Person* people[4];
-    people[0] = &student1;
-    people[1] = &student2;
-    people[2] = &seller1;
-    people[3] = &seller2;
-
-    for (int i = 0; i < 4; i++) {
-        cout << "\nPerson #" << (i + 1) << ": " << people[i]->getFullName() << endl;
+    int productCount;
+    cout << "How many products to add? "; cin >> productCount; cin.ignore();
+    for (int i = 0; i < productCount; i++) {
+        string product;
+        cout << "Enter product " << (i+1) << ": ";
+        getline(cin, product);
+        seller->addProduct(product);
     }
 
+    return seller;
+}
+
+int main() {
+    cout << "=== Practical Work #5: Polymorphism ===" << endl;
+
+    Person* people[5];
+
+    for (int i = 0; i < 5; i++) {
+        cout << "\n--- Object " << (i+1) << " of 5 ---" << endl;
+        int choice = showMenu();
+
+        if (choice == 1) {
+            people[i] = createStudent();
+        } else if (choice == 2) {
+            people[i] = createSeller();
+        } else {
+            cout << "Invalid choice! Creating default Student..." << endl;
+            people[i] = new Student();
+        }
+    }
+
+    cout << "\n\n========================================" << endl;
+    cout << "=== Displaying all created objects ===" << endl;
+    cout << "========================================" << endl;
+
+    for (int i = 0; i < 5; i++) {
+        cout << "\n--- Object " << (i+1) << " ---" << endl;
+        people[i]->display();
+    }
+
+    cout << "\n\n========================================" << endl;
+    cout << "=== Testing polymorphism (virtual method) ===" << endl;
+    cout << "========================================" << endl;
+
+    for (int i = 0; i < 5; i++) {
+        cout << "\nCalling display() for object " << (i+1) << ":" << endl;
+        people[i]->display();
+    }
+
+    cout << "\n\n=== Cleaning up memory ===" << endl;
+    for (int i = 0; i < 5; i++) {
+        delete people[i];
+    }
+
+    cout << "\nProgram finished successfully!" << endl;
     return 0;
 }
