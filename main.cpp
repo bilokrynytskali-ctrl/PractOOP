@@ -1,137 +1,234 @@
 #include <iostream>
-#include "Vector.h"
+#include <vector>
+#include <algorithm>
+#include <random>
 #include "Person.h"
 #include "Student.h"
 #include "Seller.h"
 using namespace std;
 
+// Функція для виведення вектора чисел
+void printVector(const string& name, const vector<int>& vec) {
+    cout << name << ": ";
+    for (int val : vec) {
+        cout << val << " ";
+    }
+    cout << endl;
+}
+
+// Функція для виведення вектора вказівників на Person
+void printPersonVector(const string& name, const vector<Person*>& vec) {
+    cout << "\n=== " << name << " (size: " << vec.size() << ") ===" << endl;
+    for (size_t i = 0; i < vec.size(); i++) {
+        cout << "\n[" << i << "] ";
+        vec[i]->display();
+    }
+}
+
+// Меню для створення об'єктів
+int showMenu() {
+    int choice;
+    cout << "\n=== Add Object Menu ===" << endl;
+    cout << "1. Add Student" << endl;
+    cout << "2. Add Seller" << endl;
+    cout << "0. Finish adding" << endl;
+    cout << "Enter choice: ";
+    cin >> choice;
+    cin.ignore();
+    return choice;
+}
+
+// Створення Student
+Student* createStudent() {
+    int id, course;
+    string lastName, firstName, patronymic, address, phone, faculty, group;
+    
+    cout << "\n--- Creating Student ---" << endl;
+    cout << "ID: "; cin >> id; cin.ignore();
+    cout << "Last name: "; getline(cin, lastName);
+    cout << "First name: "; getline(cin, firstName);
+    cout << "Patronymic: "; getline(cin, patronymic);
+    cout << "Address: "; getline(cin, address);
+    cout << "Phone: "; getline(cin, phone);
+    cout << "Faculty: "; getline(cin, faculty);
+    cout << "Course: "; cin >> course; cin.ignore();
+    cout << "Group: "; getline(cin, group);
+    
+    return new Student(id, lastName, firstName, patronymic, address, phone, faculty, course, group);
+}
+
+// Створення Seller
+Seller* createSeller() {
+    int id;
+    string lastName, firstName, patronymic, address, accountNumber;
+    
+    cout << "\n--- Creating Seller ---" << endl;
+    cout << "ID: "; cin >> id; cin.ignore();
+    cout << "Last name: "; getline(cin, lastName);
+    cout << "First name: "; getline(cin, firstName);
+    cout << "Patronymic: "; getline(cin, patronymic);
+    cout << "Address: "; getline(cin, address);
+    cout << "Account number: "; getline(cin, accountNumber);
+    
+    Seller* seller = new Seller(id, lastName, firstName, patronymic, address, accountNumber);
+    
+    int productCount;
+    cout << "Number of products: "; cin >> productCount; cin.ignore();
+    for (int i = 0; i < productCount; i++) {
+        string product;
+        cout << "Product " << (i+1) << ": ";
+        getline(cin, product);
+        seller->addProduct(product);
+    }
+    
+    return seller;
+}
+
 int main() {
-    cout << "========================================" << endl;
-    cout << "   PRACTICAL WORK #6: Template Vector  " << endl;
-    cout << "========================================" << endl << endl;
+    cout << "============================================" << endl;
+    cout << "   PRACTICAL WORK #7: STL Algorithms       " << endl;
+    cout << "============================================" << endl << endl;
 
     // ============================================
-    // ЧАСТИНА 1: Тестування Vector з базовими типами
+    // ЧАСТИНА 1: Робота з векторами цілих чисел
     // ============================================
     
-    // Тест 1: Vector з int
-    cout << "=== Test 1: Vector<int> ===" << endl;
-    Vector<int> intVector;
-    intVector.push_back(10);
-    intVector.push_back(20);
-    intVector.push_back(30);
-    intVector.print();
-    cout << "Element at index 1: " << intVector.at(1) << endl;
-    cout << "Element [2]: " << intVector[2] << endl;
-    intVector.pop_back();
-    cout << "After pop_back(): ";
-    intVector.print();
-    cout << "Size: " << intVector.getSize() << ", Capacity: " << intVector.getCapacity() << endl;
-    cout << endl;
-
-    // Тест 2: Vector з double
-    cout << "=== Test 2: Vector<double> ===" << endl;
-    Vector<double> doubleVector;
-    doubleVector.push_back(3.14159);
-    doubleVector.push_back(2.71828);
-    doubleVector.push_back(1.41421);
-    doubleVector.print();
-    cout << endl;
-
-    // Тест 3: Vector з float (перевірка автоматичного розширення)
-    cout << "=== Test 3: Vector<float> - Auto resize ===" << endl;
-    Vector<float> floatVector;
-    cout << "Adding 12 elements (initial capacity is 10)..." << endl;
-    for (int i = 0; i < 12; i++) {
-        floatVector.push_back(i * 1.5f);
-    }
-    floatVector.print();
-    cout << endl;
-
-    // Тест 4: Vector з long
-    cout << "=== Test 4: Vector<long> ===" << endl;
-    Vector<long> longVector;
-    longVector.push_back(1000000L);
-    longVector.push_back(2000000L);
-    longVector.push_back(3000000L);
-    longVector.print();
-    cout << "Size: " << longVector.getSize() << endl;
-    cout << "Capacity: " << longVector.getCapacity() << endl;
-    cout << endl;
-
-    // ============================================
-    // ЧАСТИНА 2: Тестування Vector з вказівниками на базовий клас Person
-    // ============================================
+    cout << "=== Part 1: Integer Vectors ===" << endl << endl;
     
-    cout << "========================================" << endl;
-    cout << "=== Test 5: Vector<Person*> - Polymorphism ===" << endl;
-    cout << "========================================" << endl << endl;
+    // Генератор випадкових чисел
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> oddDist(1, 99);   // Непарні числа
+    uniform_int_distribution<> evenDist(2, 100); // Парні числа
     
-    Vector<Person*> personVector;
-    
-    // Створюємо об'єкти Student
-    cout << "Creating Student objects..." << endl;
-    Student* s1 = new Student(101, "Ivanov", "Ivan", "Ivanovich", 
-                              "Kyiv, Shevchenko St. 10", "+380501234567",
-                              "Computer Science", 2, "CS-21");
-    
-    Student* s2 = new Student(102, "Petrova", "Maria", "Petrovna",
-                              "Kyiv, Khreshchatyk St. 25", "+380502345678",
-                              "Mathematics", 3, "M-31");
-    
-    // Створюємо об'єкти Seller
-    cout << "Creating Seller objects..." << endl;
-    Seller* seller1 = new Seller(201, "Kovalenko", "Oleh", "Mykolayovych",
-                                 "Kyiv, Maydan Nezalezhnosti 1", "ACC123456");
-    seller1->addProduct("Laptop");
-    seller1->addProduct("Mouse");
-    seller1->addProduct("Keyboard");
-    
-    Seller* seller2 = new Seller(202, "Shevchenko", "Oksana", "Ivanivna",
-                                 "Lviv, Svobody Ave. 5", "ACC789012");
-    seller2->addProduct("Phone");
-    seller2->addProduct("Tablet");
-    
-    // Додаємо об'єкти у Vector
-    cout << "\nAdding objects to Vector<Person*>..." << endl;
-    personVector.push_back(s1);
-    personVector.push_back(s2);
-    personVector.push_back(seller1);
-    personVector.push_back(seller2);
-    
-    cout << "Vector size: " << personVector.getSize() << endl;
-    cout << "Vector capacity: " << personVector.getCapacity() << endl;
-    cout << endl;
-    
-    // ============================================
-    // ЧАСТИНА 3: Виклик віртуального методу display()
-    // ============================================
-    
-    cout << "========================================" << endl;
-    cout << "=== Calling virtual method display() ===" << endl;
-    cout << "========================================" << endl << endl;
-    
-    for (int i = 0; i < personVector.getSize(); i++) {
-        cout << "--- Object " << (i + 1) << " ---" << endl;
-        personVector[i]->display();  // Поліморфний виклик
-        cout << endl;
+    // Вектор 1: Непарні числа (через індекс)
+    vector<int> oddVector(10);
+    cout << "Filling vector 1 with 10 odd numbers (using index)..." << endl;
+    for (size_t i = 0; i < oddVector.size(); i++) {
+        int num;
+        do {
+            num = oddDist(gen);
+        } while (num % 2 == 0); // Переконуємось, що число непарне
+        oddVector[i] = num;
     }
     
-    // ============================================
-    // ЧАСТИНА 4: Очищення пам'яті
-    // ============================================
-    
-    cout << "========================================" << endl;
-    cout << "=== Cleaning up memory ===" << endl;
-    cout << "========================================" << endl;
-    
-    for (int i = 0; i < personVector.getSize(); i++) {
-        delete personVector[i];
+    // Вектор 2: Парні числа (через ітератор)
+    vector<int> evenVector(10);
+    cout << "Filling vector 2 with 10 even numbers (using iterator)..." << endl;
+    for (auto it = evenVector.begin(); it != evenVector.end(); ++it) {
+        int num;
+        do {
+            num = evenDist(gen);
+        } while (num % 2 != 0); // Переконуємось, що число парне
+        *it = num;
     }
     
-    cout << "\n========================================" << endl;
-    cout << "   All tests completed successfully!   " << endl;
-    cout << "========================================" << endl;
+    // Виведення векторів до сортування
+    cout << "\nBefore sorting:" << endl;
+    printVector("Odd vector", oddVector);
+    printVector("Even vector", evenVector);
+    
+    // Сортування векторів
+    sort(oddVector.begin(), oddVector.end());
+    sort(evenVector.begin(), evenVector.end());
+    
+    cout << "\nAfter sorting:" << endl;
+    printVector("Odd vector (sorted)", oddVector);
+    printVector("Even vector (sorted)", evenVector);
+    
+    // Об'єднання векторів
+    vector<int> mergedVector(oddVector.size() + evenVector.size());
+    merge(oddVector.begin(), oddVector.end(), 
+          evenVector.begin(), evenVector.end(), 
+          mergedVector.begin());
+    
+    cout << "\nAfter merging:" << endl;
+    printVector("Merged vector", mergedVector);
+    
+    // ============================================
+    // ЧАСТИНА 2: Робота з векторами вказівників Person
+    // ============================================
+    
+    cout << "\n\n============================================" << endl;
+    cout << "=== Part 2: Person* Vectors ===" << endl;
+    cout << "============================================" << endl;
+    
+    // Створення та заповнення вектора через меню
+    vector<Person*> personVector;
+    
+    while (true) {
+        int choice = showMenu();
+        
+        if (choice == 0) {
+            break;
+        } else if (choice == 1) {
+            personVector.push_back(createStudent());
+            cout << "Student added successfully!" << endl;
+        } else if (choice == 2) {
+            personVector.push_back(createSeller());
+            cout << "Seller added successfully!" << endl;
+        } else {
+            cout << "Invalid choice!" << endl;
+        }
+    }
+    
+    // Виведення початкового вектора
+    printPersonVector("Original vector", personVector);
+    
+    // Створення копії вектора
+    vector<Person*> personVectorCopy;
+    for (Person* p : personVector) {
+        // Створюємо копії об'єктів
+        Student* student = dynamic_cast<Student*>(p);
+        Seller* seller = dynamic_cast<Seller*>(p);
+        
+        if (student) {
+            personVectorCopy.push_back(new Student(*student));
+        } else if (seller) {
+            personVectorCopy.push_back(new Seller(*seller));
+        }
+    }
+    
+    cout << "\n\n--- Removing Students from vector 1 ---" << endl;
+    // Видалення всіх Student з першого вектора
+    auto it1 = personVector.begin();
+    while (it1 != personVector.end()) {
+        if (dynamic_cast<Student*>(*it1)) {
+            delete *it1;
+            it1 = personVector.erase(it1);
+        } else {
+            ++it1;
+        }
+    }
+    
+    cout << "--- Removing Sellers from vector 2 ---" << endl;
+    // Видалення всіх Seller з другого вектора
+    auto it2 = personVectorCopy.begin();
+    while (it2 != personVectorCopy.end()) {
+        if (dynamic_cast<Seller*>(*it2)) {
+            delete *it2;
+            it2 = personVectorCopy.erase(it2);
+        } else {
+            ++it2;
+        }
+    }
+    
+    // Виведення результатів
+    printPersonVector("Vector 1 (only Sellers)", personVector);
+    printPersonVector("Vector 2 (only Students)", personVectorCopy);
+    
+    // Очищення пам'яті
+    cout << "\n\n--- Cleaning up memory ---" << endl;
+    for (Person* p : personVector) {
+        delete p;
+    }
+    for (Person* p : personVectorCopy) {
+        delete p;
+    }
+    
+    cout << "\n============================================" << endl;
+    cout << "   All tests completed successfully!       " << endl;
+    cout << "============================================" << endl;
 
     return 0;
 }
