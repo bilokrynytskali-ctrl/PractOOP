@@ -13,3 +13,4 @@ HEADERS += \
     Person.h \
     Student.h \
     Seller.h
+    Vector.h
