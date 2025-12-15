@@ -1,234 +1,257 @@
 #include <iostream>
 #include <vector>
+#include <map>
 #include <algorithm>
 #include <random>
+#include <list>
+#include <string>
 #include "Person.h"
 #include "Student.h"
 #include "Seller.h"
 using namespace std;
 
-// Функція для виведення вектора чисел
-void printVector(const string& name, const vector<int>& vec) {
-    cout << name << ": ";
-    for (int val : vec) {
-        cout << val << " ";
+// Прототипи функцій
+void testLists();
+int showMenu();
+void addObjectToMap(map<int, Person*>& people);
+void displayObjectById(const map<int, Person*>& people);
+void displayAllObjects(const map<int, Person*>& people);
+
+// Функція тестування списків
+void testLists() {
+    cout << "\n=== Testing std::list ===" << endl;
+
+    // Генератор випадкових чисел
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dis(1, 100);
+
+    // Перший список - непарні числа
+    list<int> oddList;
+    cout << "\nGenerating odd numbers..." << endl;
+    while (oddList.size() < 10) {
+        int num = dis(gen);
+        if (num % 2 != 0) {  // Якщо непарне
+            oddList.push_back(num);
+        }
+    }
+
+    // Другий список - парні числа (з використанням ітератора)
+    list<int> evenList;
+    cout << "Generating even numbers..." << endl;
+    while (evenList.size() < 10) {
+        int num = dis(gen);
+        if (num % 2 == 0) {  // Якщо парне
+            auto it = evenList.end();
+            evenList.insert(it, num);
+        }
+    }
+
+    // Виведення перших двох списків
+    cout << "\nOdd list (before sort): ";
+    for (const auto& num : oddList) {
+        cout << num << " ";
     }
     cout << endl;
-}
 
-// Функція для виведення вектора вказівників на Person
-void printPersonVector(const string& name, const vector<Person*>& vec) {
-    cout << "\n=== " << name << " (size: " << vec.size() << ") ===" << endl;
-    for (size_t i = 0; i < vec.size(); i++) {
-        cout << "\n[" << i << "] ";
-        vec[i]->display();
+    cout << "Even list (before sort): ";
+    for (const auto& num : evenList) {
+        cout << num << " ";
     }
+    cout << endl;
+
+    // Сортування списків
+    oddList.sort();
+    evenList.sort();
+
+    cout << "\nOdd list (after sort): ";
+    for (const auto& num : oddList) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    cout << "Even list (after sort): ";
+    for (const auto& num : evenList) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    // Об'єднання списків
+    list<int> mergedList;
+    merge(oddList.begin(), oddList.end(),
+          evenList.begin(), evenList.end(),
+          back_inserter(mergedList));
+
+    cout << "\nMerged list: ";
+    for (const auto& num : mergedList) {
+        cout << num << " ";
+    }
+    cout << endl;
+
+    cout << "Merged list size: " << mergedList.size() << endl;
 }
 
-// Меню для створення об'єктів
+// Функція виводу меню
 int showMenu() {
     int choice;
-    cout << "\n=== Add Object Menu ===" << endl;
-    cout << "1. Add Student" << endl;
-    cout << "2. Add Seller" << endl;
-    cout << "0. Finish adding" << endl;
-    cout << "Enter choice: ";
+    cout << "\n=== Menu ===" << endl;
+    cout << "1. Add object to map" << endl;
+    cout << "2. Display object by ID" << endl;
+    cout << "3. Display all objects" << endl;
+    cout << "4. Exit" << endl;
+    cout << "Enter your choice: ";
     cin >> choice;
     cin.ignore();
     return choice;
 }
 
-// Створення Student
-Student* createStudent() {
-    int id, course;
-    string lastName, firstName, patronymic, address, phone, faculty, group;
-    
-    cout << "\n--- Creating Student ---" << endl;
-    cout << "ID: "; cin >> id; cin.ignore();
-    cout << "Last name: "; getline(cin, lastName);
-    cout << "First name: "; getline(cin, firstName);
-    cout << "Patronymic: "; getline(cin, patronymic);
-    cout << "Address: "; getline(cin, address);
-    cout << "Phone: "; getline(cin, phone);
-    cout << "Faculty: "; getline(cin, faculty);
-    cout << "Course: "; cin >> course; cin.ignore();
-    cout << "Group: "; getline(cin, group);
-    
-    return new Student(id, lastName, firstName, patronymic, address, phone, faculty, course, group);
+// Функція додавання об'єкта в map
+void addObjectToMap(map<int, Person*>& people) {
+    int type, id;
+
+    cout << "\n--- Add Object ---" << endl;
+    cout << "Select type: 1 - Student, 2 - Seller: ";
+    cin >> type;
+    cin.ignore();
+
+    cout << "Enter ID: ";
+    cin >> id;
+    cin.ignore();
+
+    // Перевірка чи ID вже існує
+    if (people.find(id) != people.end()) {
+        cout << "Error: Object with ID " << id << " already exists!" << endl;
+        return;
+    }
+
+    if (type == 1) {
+        // Створення Student
+        string lastName, firstName, patronymic, address, phone, faculty, group;
+        int course;
+
+        cout << "Enter last name: "; getline(cin, lastName);
+        cout << "Enter first name: "; getline(cin, firstName);
+        cout << "Enter patronymic: "; getline(cin, patronymic);
+        cout << "Enter address: "; getline(cin, address);
+        cout << "Enter phone: "; getline(cin, phone);
+        cout << "Enter faculty: "; getline(cin, faculty);
+        cout << "Enter course: "; cin >> course; cin.ignore();
+        cout << "Enter group: "; getline(cin, group);
+
+        Student* student = new Student(id, lastName, firstName, patronymic,
+                                       address, phone, faculty, course, group);
+        people[id] = student;
+        cout << "\nStudent added successfully with ID: " << id << endl;
+
+    } else if (type == 2) {
+        // Створення Seller
+        string lastName, firstName, patronymic, address, accountNumber;
+
+        cout << "Enter last name: "; getline(cin, lastName);
+        cout << "Enter first name: "; getline(cin, firstName);
+        cout << "Enter patronymic: "; getline(cin, patronymic);
+        cout << "Enter address: "; getline(cin, address);
+        cout << "Enter account number: "; getline(cin, accountNumber);
+
+        Seller* seller = new Seller(id, lastName, firstName, patronymic,
+                                    address, accountNumber);
+
+        int productCount;
+        cout << "How many products to add? "; cin >> productCount; cin.ignore();
+        for (int i = 0; i < productCount; i++) {
+            string product;
+            cout << "Enter product " << (i+1) << ": ";
+            getline(cin, product);
+            seller->addProduct(product);
+        }
+
+        people[id] = seller;
+        cout << "\nSeller added successfully with ID: " << id << endl;
+
+    } else {
+        cout << "Invalid type!" << endl;
+    }
 }
 
-// Створення Seller
-Seller* createSeller() {
+// Функція виведення об'єкта за ID
+void displayObjectById(const map<int, Person*>& people) {
     int id;
-    string lastName, firstName, patronymic, address, accountNumber;
-    
-    cout << "\n--- Creating Seller ---" << endl;
-    cout << "ID: "; cin >> id; cin.ignore();
-    cout << "Last name: "; getline(cin, lastName);
-    cout << "First name: "; getline(cin, firstName);
-    cout << "Patronymic: "; getline(cin, patronymic);
-    cout << "Address: "; getline(cin, address);
-    cout << "Account number: "; getline(cin, accountNumber);
-    
-    Seller* seller = new Seller(id, lastName, firstName, patronymic, address, accountNumber);
-    
-    int productCount;
-    cout << "Number of products: "; cin >> productCount; cin.ignore();
-    for (int i = 0; i < productCount; i++) {
-        string product;
-        cout << "Product " << (i+1) << ": ";
-        getline(cin, product);
-        seller->addProduct(product);
+    cout << "\n--- Display Object by ID ---" << endl;
+    cout << "Enter ID: ";
+    cin >> id;
+    cin.ignore();
+
+    auto it = people.find(id);
+    if (it != people.end()) {
+        cout << "\nFound object with ID " << id << ":" << endl;
+        it->second->display();
+    } else {
+        cout << "Object with ID " << id << " not found!" << endl;
     }
-    
-    return seller;
+}
+
+// Функція виведення всіх об'єктів
+void displayAllObjects(const map<int, Person*>& people) {
+    cout << "\n--- All Objects in Map ---" << endl;
+
+    if (people.empty()) {
+        cout << "Map is empty!" << endl;
+        return;
+    }
+
+    cout << "Total objects: " << people.size() << endl;
+
+    for (const auto& pair : people) {
+        cout << "\n>>> ID: " << pair.first << " <<<" << endl;
+        pair.second->display();
+    }
 }
 
 int main() {
-    cout << "============================================" << endl;
-    cout << "   PRACTICAL WORK #7: STL Algorithms       " << endl;
-    cout << "============================================" << endl << endl;
+    cout << "========================================" << endl;
+    cout << "=== Practical Work #8: list & map ===" << endl;
+    cout << "========================================\n" << endl;
 
-    // ============================================
-    // ЧАСТИНА 1: Робота з векторами цілих чисел
-    // ============================================
-    
-    cout << "=== Part 1: Integer Vectors ===" << endl << endl;
-    
-    // Генератор випадкових чисел
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<> oddDist(1, 99);   // Непарні числа
-    uniform_int_distribution<> evenDist(2, 100); // Парні числа
-    
-    // Вектор 1: Непарні числа (через індекс)
-    vector<int> oddVector(10);
-    cout << "Filling vector 1 with 10 odd numbers (using index)..." << endl;
-    for (size_t i = 0; i < oddVector.size(); i++) {
-        int num;
-        do {
-            num = oddDist(gen);
-        } while (num % 2 == 0); // Переконуємось, що число непарне
-        oddVector[i] = num;
-    }
-    
-    // Вектор 2: Парні числа (через ітератор)
-    vector<int> evenVector(10);
-    cout << "Filling vector 2 with 10 even numbers (using iterator)..." << endl;
-    for (auto it = evenVector.begin(); it != evenVector.end(); ++it) {
-        int num;
-        do {
-            num = evenDist(gen);
-        } while (num % 2 != 0); // Переконуємось, що число парне
-        *it = num;
-    }
-    
-    // Виведення векторів до сортування
-    cout << "\nBefore sorting:" << endl;
-    printVector("Odd vector", oddVector);
-    printVector("Even vector", evenVector);
-    
-    // Сортування векторів
-    sort(oddVector.begin(), oddVector.end());
-    sort(evenVector.begin(), evenVector.end());
-    
-    cout << "\nAfter sorting:" << endl;
-    printVector("Odd vector (sorted)", oddVector);
-    printVector("Even vector (sorted)", evenVector);
-    
-    // Об'єднання векторів
-    vector<int> mergedVector(oddVector.size() + evenVector.size());
-    merge(oddVector.begin(), oddVector.end(), 
-          evenVector.begin(), evenVector.end(), 
-          mergedVector.begin());
-    
-    cout << "\nAfter merging:" << endl;
-    printVector("Merged vector", mergedVector);
-    
-    // ============================================
-    // ЧАСТИНА 2: Робота з векторами вказівників Person
-    // ============================================
-    
-    cout << "\n\n============================================" << endl;
-    cout << "=== Part 2: Person* Vectors ===" << endl;
-    cout << "============================================" << endl;
-    
-    // Створення та заповнення вектора через меню
-    vector<Person*> personVector;
-    
-    while (true) {
+    // Тестування std::list
+    testLists();
+
+    // Робота з std::map
+    cout << "\n\n========================================" << endl;
+    cout << "=== Working with std::map<int, Person*> ===" << endl;
+    cout << "========================================\n" << endl;
+
+    map<int, Person*> people;
+
+    bool running = true;
+    while (running) {
         int choice = showMenu();
-        
-        if (choice == 0) {
-            break;
-        } else if (choice == 1) {
-            personVector.push_back(createStudent());
-            cout << "Student added successfully!" << endl;
-        } else if (choice == 2) {
-            personVector.push_back(createSeller());
-            cout << "Seller added successfully!" << endl;
-        } else {
-            cout << "Invalid choice!" << endl;
-        }
-    }
-    
-    // Виведення початкового вектора
-    printPersonVector("Original vector", personVector);
-    
-    // Створення копії вектора
-    vector<Person*> personVectorCopy;
-    for (Person* p : personVector) {
-        // Створюємо копії об'єктів
-        Student* student = dynamic_cast<Student*>(p);
-        Seller* seller = dynamic_cast<Seller*>(p);
-        
-        if (student) {
-            personVectorCopy.push_back(new Student(*student));
-        } else if (seller) {
-            personVectorCopy.push_back(new Seller(*seller));
-        }
-    }
-    
-    cout << "\n\n--- Removing Students from vector 1 ---" << endl;
-    // Видалення всіх Student з першого вектора
-    auto it1 = personVector.begin();
-    while (it1 != personVector.end()) {
-        if (dynamic_cast<Student*>(*it1)) {
-            delete *it1;
-            it1 = personVector.erase(it1);
-        } else {
-            ++it1;
-        }
-    }
-    
-    cout << "--- Removing Sellers from vector 2 ---" << endl;
-    // Видалення всіх Seller з другого вектора
-    auto it2 = personVectorCopy.begin();
-    while (it2 != personVectorCopy.end()) {
-        if (dynamic_cast<Seller*>(*it2)) {
-            delete *it2;
-            it2 = personVectorCopy.erase(it2);
-        } else {
-            ++it2;
-        }
-    }
-    
-    // Виведення результатів
-    printPersonVector("Vector 1 (only Sellers)", personVector);
-    printPersonVector("Vector 2 (only Students)", personVectorCopy);
-    
-    // Очищення пам'яті
-    cout << "\n\n--- Cleaning up memory ---" << endl;
-    for (Person* p : personVector) {
-        delete p;
-    }
-    for (Person* p : personVectorCopy) {
-        delete p;
-    }
-    
-    cout << "\n============================================" << endl;
-    cout << "   All tests completed successfully!       " << endl;
-    cout << "============================================" << endl;
 
+        switch (choice) {
+        case 1:
+            addObjectToMap(people);
+            break;
+        case 2:
+            displayObjectById(people);
+            break;
+        case 3:
+            displayAllObjects(people);
+            break;
+        case 4:
+            running = false;
+            cout << "\nExiting program..." << endl;
+            break;
+        default:
+            cout << "\nInvalid choice! Try again." << endl;
+        }
+    }
+
+    // Очищення пам'яті
+    cout << "\n--- Cleaning up memory ---" << endl;
+    for (auto& pair : people) {
+        delete pair.second;
+    }
+    people.clear();
+
+    cout << "\nProgram finished successfully!" << endl;
     return 0;
 }
