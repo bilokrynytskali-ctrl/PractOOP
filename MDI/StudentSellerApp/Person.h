@@ -31,6 +31,10 @@ public:
     // Геттери
     int getId() const;
     string getFullName() const;
+    string getLastName() const;
+    string getFirstName() const;
+    string getPatronymic() const;
+    string getAddress() const;
 };
 
 #endif

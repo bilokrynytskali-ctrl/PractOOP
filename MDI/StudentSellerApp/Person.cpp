@@ -47,3 +47,11 @@ int Person::getId() const { return id; }
 string Person::getFullName() const {
     return lastName + " " + firstName + " " + patronymic;
 }
+
+string Person::getLastName() const { return lastName; }
+
+string Person::getFirstName() const { return firstName; }
+
+string Person::getPatronymic() const { return patronymic; }
+
+string Person::getAddress() const { return address; }

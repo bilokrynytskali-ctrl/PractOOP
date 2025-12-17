@@ -43,3 +43,12 @@ void Student::display() const {
     cout << "Course: " << course << endl;
     cout << "Group: " << group << endl;
 }
+
+// Геттери
+string Student::getPhone() const { return phone; }
+
+string Student::getFaculty() const { return faculty; }
+
+int Student::getCourse() const { return course; }
+
+string Student::getGroup() const { return group; }

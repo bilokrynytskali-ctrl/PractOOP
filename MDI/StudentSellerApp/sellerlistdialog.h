@@ -2,8 +2,8 @@
 #define SELLERLISTDIALOG_H
 
 #include <QDialog>
-#include <QVector>
-#include "Seller.h"
+#include <QSqlDatabase>
+#include <QSqlTableModel>
 
 namespace Ui {
 class SellerListDialog;
@@ -17,11 +17,12 @@ public:
     explicit SellerListDialog(QWidget *parent = nullptr);
     ~SellerListDialog();
     
-    void setSellers(const QVector<Seller*>& sellers);
-    void updateList(const QVector<Seller*>& sellers);
+    void setDatabase(QSqlDatabase db);
+    void updateList();
 
 private:
     Ui::SellerListDialog *ui;
+    QSqlTableModel* model;
 };
 
 #endif // SELLERLISTDIALOG_H

@@ -3,33 +3,35 @@
 #include "studentdialog.h"
 #include "sellerdialog.h"
 #include <QMessageBox>
+#include <QSqlTableModel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , studentListDialog(nullptr)
     , sellerListDialog(nullptr)
+    , dbManager(nullptr)
 {
     ui->setupUi(this);
-    setWindowTitle("Student & Seller Management (MDI)");
+    setWindowTitle("Student & Seller Management (MDI + DB)");
+    
+    // Створити менеджер БД
+    dbManager = new SqliteDBManager(this);
     
     // Створити немодальні вікна списків
     studentListDialog = new StudentListDialog(this);
     sellerListDialog = new SellerListDialog(this);
+    
+    // Передати БД в діалоги
+    studentListDialog->setDatabase(dbManager->getDB());
+    sellerListDialog->setDatabase(dbManager->getDB());
 }
 
 MainWindow::~MainWindow()
 {
-    // Очистити пам'ять
-    for (auto student : students) {
-        delete student;
-    }
-    for (auto seller : sellers) {
-        delete seller;
-    }
-    
     delete studentListDialog;
     delete sellerListDialog;
+    delete dbManager;
     delete ui;
 }
 
@@ -57,7 +59,7 @@ void MainWindow::on_pushButton_showStudents_clicked()
         studentListDialog->hide();
         ui->pushButton_showStudents->setText("Показати Students");
     } else {
-        studentListDialog->updateList(students);
+        studentListDialog->updateList();
         studentListDialog->show();
         ui->pushButton_showStudents->setText("Сховати Students");
     }
@@ -69,7 +71,7 @@ void MainWindow::on_pushButton_showSellers_clicked()
         sellerListDialog->hide();
         ui->pushButton_showSellers->setText("Показати Sellers");
     } else {
-        sellerListDialog->updateList(sellers);
+        sellerListDialog->updateList();
         sellerListDialog->show();
         ui->pushButton_showSellers->setText("Сховати Sellers");
     }
@@ -82,16 +84,36 @@ void MainWindow::on_pushButton_exit_clicked()
 
 void MainWindow::onStudentCreated(Student* student)
 {
-    students.append(student);
-    ui->label_status->setText(QString("Students: %1 | Sellers: %2")
-                               .arg(students.size())
-                               .arg(sellers.size()));
+    // Зберегти в БД
+    if (dbManager->insertIntoTable(*student)) {
+        QMessageBox::information(this, "Успіх", "Student збережено в БД!");
+        
+        // Оновити вікно зі списком якщо воно відкрите
+        if (studentListDialog->isVisible()) {
+            studentListDialog->updateList();
+        }
+    } else {
+        QMessageBox::warning(this, "Помилка", "Не вдалося зберегти Student в БД!");
+    }
+    
+    // Видалити об'єкт
+    delete student;
 }
 
 void MainWindow::onSellerCreated(Seller* seller)
 {
-    sellers.append(seller);
-    ui->label_status->setText(QString("Students: %1 | Sellers: %2")
-                               .arg(students.size())
-                               .arg(sellers.size()));
+    // Зберегти в БД
+    if (dbManager->insertIntoTable(*seller)) {
+        QMessageBox::information(this, "Успіх", "Seller збережено в БД!");
+        
+        // Оновити вікно зі списком якщо воно відкрите
+        if (sellerListDialog->isVisible()) {
+            sellerListDialog->updateList();
+        }
+    } else {
+        QMessageBox::warning(this, "Помилка", "Не вдалося зберегти Seller в БД!");
+    }
+    
+    // Видалити об'єкт
+    delete seller;
 }

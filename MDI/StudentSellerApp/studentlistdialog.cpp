@@ -3,7 +3,8 @@
 
 StudentListDialog::StudentListDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::StudentListDialog)
+    ui(new Ui::StudentListDialog),
+    model(nullptr)
 {
     ui->setupUi(this);
     setWindowTitle("Список Students");
@@ -11,24 +12,37 @@ StudentListDialog::StudentListDialog(QWidget *parent) :
 
 StudentListDialog::~StudentListDialog()
 {
+    delete model;
     delete ui;
 }
 
-void StudentListDialog::setStudents(const QVector<Student*>& students)
+void StudentListDialog::setDatabase(QSqlDatabase db)
 {
-    updateList(students);
+    model = new QSqlTableModel(this, db);
+    model->setTable("Students");
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    
+    // Встановити заголовки
+    model->setHeaderData(0, Qt::Horizontal, "ID");
+    model->setHeaderData(1, Qt::Horizontal, "Прізвище");
+    model->setHeaderData(2, Qt::Horizontal, "Ім'я");
+    model->setHeaderData(3, Qt::Horizontal, "По батькові");
+    model->setHeaderData(4, Qt::Horizontal, "Адреса");
+    model->setHeaderData(5, Qt::Horizontal, "Телефон");
+    model->setHeaderData(6, Qt::Horizontal, "Факультет");
+    model->setHeaderData(7, Qt::Horizontal, "Курс");
+    model->setHeaderData(8, Qt::Horizontal, "Група");
+    
+    model->select();
+    
+    ui->tableView->setModel(model);
+    ui->tableView->resizeColumnsToContents();
 }
 
-void StudentListDialog::updateList(const QVector<Student*>& students)
+void StudentListDialog::updateList()
 {
-    ui->listWidget->clear();
-    
-    for (const auto& student : students) {
-        QString info = QString("ID: %1 - %2")
-                        .arg(student->getId())
-                        .arg(QString::fromStdString(student->getFullName()));
-        ui->listWidget->addItem(info);
+    if (model) {
+        model->select();
+        ui->label_count->setText(QString("Всього: %1").arg(model->rowCount()));
     }
-    
-    ui->label_count->setText(QString("Всього: %1").arg(students.size()));
 }

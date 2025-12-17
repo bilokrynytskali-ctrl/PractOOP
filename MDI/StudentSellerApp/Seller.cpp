@@ -63,3 +63,8 @@ void Seller::display() const {
     cout << "Account number: " << accountNumber << endl;
     displayProducts();
 }
+
+// Геттери
+string Seller::getAccountNumber() const { return accountNumber; }
+
+vector<string> Seller::getProducts() const { return products; }

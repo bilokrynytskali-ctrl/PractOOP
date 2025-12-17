@@ -28,6 +28,10 @@ public:
 
     // Перевизначений метод виведення
     void display() const override;
+    
+    // Геттери
+    string getAccountNumber() const;
+    vector<string> getProducts() const;
 };
 
 #endif

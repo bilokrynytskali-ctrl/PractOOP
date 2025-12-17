@@ -2,11 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QVector>
 #include "Student.h"
 #include "Seller.h"
 #include "studentlistdialog.h"
 #include "sellerlistdialog.h"
+#include "sqlitedbmanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,10 +32,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QVector<Student*> students;
-    QVector<Seller*> sellers;
     StudentListDialog* studentListDialog;
     SellerListDialog* sellerListDialog;
+    SqliteDBManager* dbManager;
 };
 
 #endif // MAINWINDOW_H

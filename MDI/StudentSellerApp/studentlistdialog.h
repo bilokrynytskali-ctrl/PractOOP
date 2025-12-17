@@ -2,8 +2,8 @@
 #define STUDENTLISTDIALOG_H
 
 #include <QDialog>
-#include <QVector>
-#include "Student.h"
+#include <QSqlDatabase>
+#include <QSqlTableModel>
 
 namespace Ui {
 class StudentListDialog;
@@ -17,11 +17,12 @@ public:
     explicit StudentListDialog(QWidget *parent = nullptr);
     ~StudentListDialog();
     
-    void setStudents(const QVector<Student*>& students);
-    void updateList(const QVector<Student*>& students);
+    void setDatabase(QSqlDatabase db);
+    void updateList();
 
 private:
     Ui::StudentListDialog *ui;
+    QSqlTableModel* model;
 };
 
 #endif // STUDENTLISTDIALOG_H

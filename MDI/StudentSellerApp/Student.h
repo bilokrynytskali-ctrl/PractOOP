@@ -24,6 +24,12 @@ public:
 
     // Перевизначений метод виведення
     void display() const override;
+    
+    // Геттери
+    string getPhone() const;
+    string getFaculty() const;
+    int getCourse() const;
+    string getGroup() const;
 };
 
 #endif
