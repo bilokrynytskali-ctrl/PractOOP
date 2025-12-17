@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>StudentDialog</class>
+ <widget class="QDialog" name="StudentDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>450</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Створити Student</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label_title">
+     <property name="text">
+      <string>&lt;h3&gt;Новий Student&lt;/h3&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_id">
+       <property name="text">
+        <string>ID:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="lineEdit_id"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_lastName">
+       <property name="text">
+        <string>Прізвище:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="lineEdit_lastName"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_firstName">
+       <property name="text">
+        <string>Ім'я:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="lineEdit_firstName"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_patronymic">
+       <property name="text">
+        <string>По батькові:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="lineEdit_patronymic"/>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_address">
+       <property name="text">
+        <string>Адреса:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="lineEdit_address"/>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_phone">
+       <property name="text">
+        <string>Телефон:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="lineEdit_phone"/>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_faculty">
+       <property name="text">
+        <string>Факультет:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="lineEdit_faculty"/>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_course">
+       <property name="text">
+        <string>Курс:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QSpinBox" name="spinBox_course">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>6</number>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_group">
+       <property name="text">
+        <string>Група:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QLineEdit" name="lineEdit_group"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButton_create">
+     <property name="text">
+      <string>Створити</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
